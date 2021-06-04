@@ -28,6 +28,16 @@ public class Process {
                 String fileName = source.equals("readFile") ? instructionParts[3] : null;
                 assign(variableName, source, fileName);
             }
+            else if (instructionParts[0].equals("writeFile")) {
+                String fileName = instructionParts[1];
+                String data = instructionParts[2];
+                writeFile(fileName,data);
+            }
+            else if (instructionParts[0].equals("add")) {
+                String a = instructionParts[1];
+                String b = instructionParts[2];
+                add(a,b);
+            }
         }
     }
 
@@ -40,6 +50,35 @@ public class Process {
     }
 
     private String readFile(String fileName) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(processVariables.getOrDefault(fileName,"")));
+            String input = reader.readLine();
+            return input;
+        }
+        catch (Exception e){
+            System.out.println("File Not Found");
+            return null;
+        }
+    }
+
+    private void writeFile(String fileName , String data) {
+        try {
+          FileWriter fw = new FileWriter(processVariables.getOrDefault(fileName,""));
+          fw.write(processVariables.getOrDefault(data,"NODATA"));
+          fw.close();
+
+        }
+        catch (Exception e){
+            System.out.println("File Not Found");
+            return ;
+        }
+    }
+
+    private void add (String a , String b){
+        int vala = Integer.parseInt(processVariables.getOrDefault(a,"0"));
+        int valb = Integer.parseInt(processVariables.getOrDefault(b,"0"));
+        int sum  = vala+valb;
+        processVariables.put(a,sum+"");
     }
 
     public String getVariableOrString(String varName) {
