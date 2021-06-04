@@ -2,11 +2,16 @@ import java.io.*;
 import java.util.*;
 
 public class OS {
+
+
+
     private static final String programsDir = "programs/";
     private Vector<Process> currentProcesses;
+    public HashMap<String,String> variables ;
 
     public OS() {
         currentProcesses = new Vector<>();
+        variables = new HashMap<>();
     }
 
     public void executeProgram(String filePath) throws Exception {
@@ -25,8 +30,8 @@ public class OS {
     }
 
     public String getVariableOrString(Process process, String varName) {
-        if(process.getProcessVariables().containsKey(varName))
-            return process.getProcessVariables().get(varName);
+        if(variables.containsKey(varName))
+            return variables.get(varName);
         return varName;
     }
 
