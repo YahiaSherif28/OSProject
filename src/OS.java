@@ -3,7 +3,7 @@ import java.util.*;
 
 public class OS {
     private static final String programsDir = "programs/";
-    private static final String READY = "0", RUNNING = "1", FINISHED = "2";
+    public static final String READY = "0", RUNNING = "1", FINISHED = "2";
     private static final int PCB_SIZE = 5, INSTRUCTIONS_SIZE = 100, VARIABLES_SIZE = 100;
     private static final int PROCESS_MEMORY_SIZE = PCB_SIZE + INSTRUCTIONS_SIZE + VARIABLES_SIZE;
     private int numberOfReadyProcesses;
@@ -59,8 +59,31 @@ public class OS {
         // if not in memory return -1
     }
 
-    public void executeReadyProcesses(int QSize) throws Exception {
+    public String getNextInstruction(int startIndex, int PC) {
+        return memory[startIndex + PCB_SIZE + PC];
+    }
 
+    /**
+     * reads the PCB of process and creates new Process Object
+     */
+    public Process readPCB(int processID) {
+        int sI = processID * PROCESS_MEMORY_SIZE;
+        return new Process(Integer.parseInt(memory[sI]), Integer.parseInt(memory[sI + 1]),
+                Integer.parseInt(memory[sI + 2]), memory[sI + 3], Integer.parseInt(memory[sI]), this);
+    }
+
+    public void executeReadyProcesses(int QSize) throws Exception {
+        int curProcessID = 0;
+        while (numberOfReadyProcesses > 0) {
+            Process p = readPCB(curProcessID);
+            if (p.getProcessState() == OS.READY) {
+                p.run(QSize);
+            }
+            if (p.getProcessState() == OS.FINISHED) {
+                numberOfReadyProcesses--;
+            }
+            curProcessID = (curProcessID + 1) % nextProcessID;
+        }
     }
 
     public String getVariableOrString(Process process, String varName) {
