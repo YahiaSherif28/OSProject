@@ -19,6 +19,9 @@ public class Process {
     public int getProcessID() {
         return processID;
     }
+    public int getStartIndex() {
+        return startIndex;
+    }
 
     public String getProcessState() {
         return processState;
