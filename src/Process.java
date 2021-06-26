@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Process {
 
-    private int processID, startIndex, endIndex, PC;
+    private int processID, startIndex, endIndex, PC ;
     private String processState;
     private final OS parentOS;
 
@@ -22,6 +22,10 @@ public class Process {
 
     public int getStartIndex() {
         return startIndex;
+    }
+
+    public int getPC() {
+        return PC;
     }
 
     public String getProcessState() {
