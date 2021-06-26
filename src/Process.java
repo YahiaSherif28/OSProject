@@ -1,11 +1,11 @@
-import java.util.*;
+
 import java.io.*;
 
 public class Process {
 
     private int processID, startIndex, endIndex, PC;
     private String processState;
-    private OS parentOS;
+    private final OS parentOS;
 
     public Process(int startIndex, int endIndex, int processID, String processState, int PC, OS parentOS) {
         this.processID = processID;
@@ -19,6 +19,7 @@ public class Process {
     public int getProcessID() {
         return processID;
     }
+
     public int getStartIndex() {
         return startIndex;
     }
@@ -29,13 +30,13 @@ public class Process {
 
     public void run(int qSize) throws Exception {
         processState = OS.RUNNING;
-        while (qSize-- > 0 && processState == OS.RUNNING) {
+        while (qSize-- > 0 && processState.equals(OS.RUNNING)) {
             executeInstruction();
         }
-        if (parentOS.getNextInstruction(startIndex, PC) == null) {
+        if (parentOS.getNextInstruction(startIndex, PC).equals(OS.NULL)) {
             processState = OS.FINISHED;
         }
-        if (processState == OS.RUNNING) {
+        if (processState.equals(OS.RUNNING)) {
             processState = OS.READY;
         }
         parentOS.updatePCBInMemory(startIndex, processState, PC);
@@ -43,7 +44,7 @@ public class Process {
 
     public void executeInstruction() throws Exception {
         String instruction = parentOS.getNextInstruction(startIndex, PC);
-        if (instruction == null) {
+        if (instruction.equals(OS.NULL)) {
             processState = OS.FINISHED;
             return;
         }
@@ -95,7 +96,6 @@ public class Process {
             fw.close();
         } catch (Exception e) {
             System.out.println("File Not Found");
-            return;
         }
     }
 
